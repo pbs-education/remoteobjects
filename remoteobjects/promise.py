@@ -129,6 +129,10 @@ class PromiseObject(remoteobjects.http.HttpObject):
         """Initializes a delivered, empty `PromiseObject`."""
         self._delivered = True
         self._http = None
+        self.status_code = None
+        self.error_code = None
+        self.error_message = None
+        self.form_errors = None
         super(PromiseObject, self).__init__(**kwargs)
 
     def _get_api_data(self):
@@ -218,12 +222,28 @@ class PromiseObject(remoteobjects.http.HttpObject):
         if not isinstance(data, dict):
             raise TypeError("Cannot update %r from non-dictionary data source %r"
                 % (self, data))
+
         # Clear any local instance field data
         for k in self.fields.iterkeys():
             if k in self.__dict__:
                 del self.__dict__[k]
+
+        api_data = {}
         # Update directly to avoid triggering delivery.
-        self.__dict__['api_data'] = data
+        for k, v in data_dict.items():
+            if isinstance(v, dict):
+                # Do one more level of dictionary extraction
+                for subk, subv in v.items():
+                    if subk in self.fields.keys():
+                        api_data[subk] = subv
+                    elif hasattr(self, subk):
+                        setattr(self, subk, subv)                    
+            elif k in self.fields.keys():
+                api_data[k] = v
+            elif hasattr(self, k):
+                setattr(self, k, v)
+                    
+        self.__dict__['api_data'] = api_data
 
     def update_from_response(self, url, response, content):
         """Fills the `PromiseObject` instance with the data from the given
