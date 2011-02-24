@@ -230,7 +230,7 @@ class PromiseObject(remoteobjects.http.HttpObject):
 
         api_data = {}
         # Update directly to avoid triggering delivery.
-        for k, v in data_dict.items():
+        for k, v in data.items():
             if isinstance(v, dict):
                 # Do one more level of dictionary extraction
                 for subk, subv in v.items():
