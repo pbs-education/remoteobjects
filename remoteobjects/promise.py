@@ -231,18 +231,18 @@ class PromiseObject(remoteobjects.http.HttpObject):
         api_data = {}
         # Update directly to avoid triggering delivery.
         for k, v in data.items():
-            if isinstance(v, dict):
-                # Do one more level of dictionary extraction
+            if k in self.fields.keys():
+                api_data[k] = v
+            elif hasattr(self, k):
+                setattr(self, k, v)
+            elif isinstance(v, dict):
+                # Do one more level of dictionary extraction, only if the dict name doesn't match with data key or class attributes
                 for subk, subv in v.items():
                     if subk in self.fields.keys():
                         api_data[subk] = subv
                     elif hasattr(self, subk):
                         setattr(self, subk, subv)                    
-            elif k in self.fields.keys():
-                api_data[k] = v
-            elif hasattr(self, k):
-                setattr(self, k, v)
-                    
+
         self.__dict__['api_data'] = api_data
 
     def update_from_response(self, url, response, content):
