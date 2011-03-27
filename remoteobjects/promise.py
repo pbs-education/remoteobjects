@@ -135,6 +135,9 @@ class PromiseObject(remoteobjects.http.HttpObject):
         self.form_errors = None
         super(PromiseObject, self).__init__(**kwargs)
 
+    def is_successful(self):
+        return self.status_code and int(self.status_code) < 400 or False
+
     def _get_api_data(self):
         if not self._delivered:
             self.deliver()

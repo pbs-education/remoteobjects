@@ -67,6 +67,7 @@ class HttpObject(DataObject):
         httplib.MOVED_PERMANENTLY: True,
         httplib.FOUND:             True,
         httplib.NOT_MODIFIED:      True,
+        httplib.BAD_REQUEST:       True,
     }
 
     location_headers = {
@@ -196,11 +197,8 @@ class HttpObject(DataObject):
         if response.status == httplib.PRECONDITION_FAILED:
             raise cls.PreconditionFailed('Precondition failed for %s request to %s' % (classname, url))
 
-        if response.status in (httplib.INTERNAL_SERVER_ERROR, httplib.BAD_REQUEST):
-            if response.status == httplib.BAD_REQUEST:
-                err_cls = cls.RequestError
-            else:
-                err_cls = cls.ServerError
+        if response.status == httplib.INTERNAL_SERVER_ERROR:
+            err_cls = cls.ServerError
             # Pull out an error if we can.
             content_type = response.get('content-type', '').split(';', 1)[0].strip()
             if content_type == 'text/plain':
@@ -213,6 +211,7 @@ class HttpObject(DataObject):
             raise err_cls('%d %s requesting %s %s'
                 % (response.status, response.reason, classname, url))
 
+        # Requests that have httplib.BAD_REQUEST status will be inspected for error data, will fail if no valid response was emitted
         try:
             response_has_content = cls.response_has_content[response.status]
         except KeyError:
