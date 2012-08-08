@@ -42,7 +42,7 @@ __author__ = 'Mark Paschal'
 
 import httplib
 from optparse import OptionParser
-import simplejson as json
+import json
 import sys
 from urlparse import urljoin, urlparse
 

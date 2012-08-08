@@ -61,6 +61,6 @@ setup(
 
     packages=['remoteobjects'],
     provides=['remoteobjects'],
-    requires=['simplejson(>=2.0.0)', 'httplib2(>=0.5.0)'],
-    install_requires=['simplejson>=2.0.0', 'httplib2>=0.5.0'],
+    requires=['httplib2(>=0.5.0)'],
+    install_requires=['httplib2>=0.5.0'],
 )

@@ -27,9 +27,9 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from simplejson import JSONDecoder
-from simplejson.decoder import FLAGS, BACKSLASH, STRINGCHUNK, DEFAULT_ENCODING
-from simplejson.scanner import py_make_scanner
+from json import JSONDecoder
+from json.decoder import FLAGS, BACKSLASH, STRINGCHUNK, DEFAULT_ENCODING
+from json.scanner import py_make_scanner
 import re
 
 
