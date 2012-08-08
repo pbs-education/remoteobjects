@@ -28,7 +28,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 import json
-from remoteobjects.json import ForgivingDecoder
+from remoteobjects.jsonutils import ForgivingDecoder
 
 import httplib2
 import httplib
